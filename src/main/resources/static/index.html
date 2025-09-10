@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İstifadəçi Qeydiyyat Sistemi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4e73df;
+            --secondary: #6f42c1;
+            --success: #1cc88a;
+            --danger: #e74a3b;
+            --light: #f8f9fc;
+            --dark: #5a5c69;
+        }
+
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e3e6f0;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #c53b2f 100%);
+            border: none;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.875rem;
+        }
+
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 0 0 10px 10px;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            position: sticky;
+            top: 0;
+            padding: 12px 15px;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fc;
+        }
+
+        tr:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+
+        .search-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header text-center">
+        <h1><i class="fas fa-users me-2"></i>İstifadəçi Qeydiyyat Sistemi</h1>
+        <p class="lead">İstifadəçi məlumatlarını idarə etmək üçün tam funksional panel</p>
+    </div>
+
+    <!-- Axtarış Paneli -->
+    <div class="search-panel">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="searchName" class="form-label">Ada görə axtarış</label>
+                    <input type="text" class="form-control" id="searchName" placeholder="Ad və ya soyad daxil edin">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="searchGender" class="form-label">Cinsiyyət</label>
+                    <select class="form-select" id="searchGender">
+                        <option value="">Hamısı</option>
+                        <option value="Kişi">Kişi</option>
+                        <option value="Qadın">Qadın</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="sortBy" class="form-label">Sırala</label>
+                    <select class="form-select" id="sortBy">
+                        <option value="name">Ada görə</option>
+                        <option value="surname">Soyada görə</option>
+                        <option value="age">Yaşa görə</option>
+                        <option value="salary">Maaşa görə</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100" id="resetSearch">
+                    <i class="fas fa-sync-alt me-1"></i> Sıfırla
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Qeydiyyat Formu -->
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Yeni İstifadəçi Qeydiyyatı</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success message" id="successMsg" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>İstifadəçi uğurla qeydiyyatdan keçdi!
+                    </div>
+                    <div class="alert alert-danger message" id="errorMsg" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i><span id="errorText">Xəta baş verdi</span>
+                    </div>
+
+                    <form id="registerForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="name" class="form-label">Ad</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="surname" class="form-label">Soyad</label>
+                                    <input type="text" class="form-control" id="surname" name="surname" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="age" class="form-label">Yaş</label>
+                            <input type="number" class="form-control" id="age" name="age" min="1" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Cinsiyyət</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="male" value="Kişi" required>
+                                    <label class="form-check-label" for="male">Kişi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="female" value="Qadın">
+                                    <label class="form-check-label" for="female">Qadın</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="salary" class="form-label">Maaş</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" class="form-control" id="salary" name="salary" min="0" required>
+                                <span class="input-group-text">AZN</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-user-plus me-2"></i>Qeydiyyatdan Keç
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- İstifadəçi Siyahısı -->
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Qeydiyyatdan Keçmiş İstifadəçilər</h5>
+                    <button class="btn btn-sm btn-light" id="refreshBtn">
+                        <i class="fas fa-sync-alt me-1"></i> Yenilə
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-container">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                            <tr>
+                                <th>İstifadəçi</th>
+                                <th>Yaş</th>
+                                <th>Cinsiyyət</th>
+                                <th>Maaş</th>
+                                <th>Əməliyyat</th>
+                            </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Yüklənir...</span>
+                                    </div>
+                                    <p class="mt-2">Yüklənir...</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let users = [];
+
+    const form = document.getElementById('registerForm');
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
+    const errorText = document.getElementById('errorText');
+    const usersTableBody = document.getElementById('usersTableBody');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const searchName = document.getElementById('searchName');
+    const searchGender = document.getElementById('searchGender');
+    const sortBy = document.getElementById('sortBy');
+    const resetSearch = document.getElementById('resetSearch');
+
+    // API əsas URL
+    const API_BASE = 'http://localhost:8080';
+
+    // İstifadəçiləri gətir və cədvələ əlavə et
+    function fetchUsers() {
+        usersTableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Yüklənir...</span>
+                    </div>
+                    <p class="mt-2">Yüklənir...</p>
+                </td>
+            </tr>
+        `;
+
+        fetch(`${API_BASE}/users`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('İstifadəçi məlumatları gətirilə bilmədi');
+                }
+                return response.json();
+            })
+            .then(data => {
+                users = data;
+                filterAndSortUsers();
+            })
+            .catch(error => {
+                console.error('Xəta:', error);
+                usersTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-danger">Xəta baş verdi: ' + error.message + '</td></tr>';
+            });
+    }
+
+    // Filter və sıralama funksiyası
+    function filterAndSortUsers() {
+        let filteredUsers = [...users];
+
+        // Ada görə filter
+        if (searchName.value) {
+            const searchTerm = searchName.value.toLowerCase();
+            filteredUsers = filteredUsers.filter(user =>
+                (user.name && user.name.toLowerCase().includes(searchTerm)) ||
+                (user.surname && user.surname.toLowerCase().includes(searchTerm))
+            );
+        }
+
+        // Cinsiyyətə görə filter
+        if (searchGender.value) {
+            filteredUsers = filteredUsers.filter(user => user.gender === searchGender.value);
+        }
+
+        // Sıralama
+        const sortField = sortBy.value;
+        filteredUsers.sort((a, b) => {
+            if (a[sortField] < b[sortField]) return -1;
+            if (a[sortField] > b[sortField]) return 1;
+            return 0;
+        });
+
+        renderUsers(filteredUsers);
+    }
+
+    // İstifadəçiləri cədvələ render et
+    function renderUsers(usersArray) {
+        if (usersArray.length === 0) {
+            usersTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Heç bir istifadəçi tapılmadı</td></tr>';
+            return;
+        }
+
+        usersTableBody.innerHTML = usersArray.map(user => {
+            const initials = (user.name ? user.name.charAt(0) : '') + (user.surname ? user.surname.charAt(0) : '');
+            return `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar">${initials}</div>
+                                <div>
+                                    <div class="fw-bold">${user.name || ''} ${user.surname || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${user.age || ''}</td>
+                        <td>${user.gender || ''}</td>
+                        <td><span class="fw-bold">${user.salary ? user.salary.toFixed(2) : '0.00'}</span> AZN</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-danger delete-btn" data-id="${user.id}">
+                                    <i class="fas fa-trash"></i> Sil
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+        }).join('');
+
+        // Sil düymələrinə hadisə əlavə et
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-id');
+                deleteUser(userId);
+            });
+        });
+    }
+
+    // İstifadəçi sil
+    function deleteUser(userId) {
+        if (confirm('Bu istifadəçini silmək istədiyinizə əminsiniz?')) {
+            fetch(`${API_BASE}/users/${userId}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Silinmə əməliyyatı uğursuz oldu');
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        // İstifadəçiləri yenidən yüklə
+                        fetchUsers();
+                    } else {
+                        alert('Silinmə əməliyyatı uğursuz oldu: ' + (data.message || 'Bilinməyən səbəb'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Xəta:', error);
+                    alert('Xəta baş verdi: ' + error.message);
+                });
+        }
+    }
+
+    // Form göndərildikdə
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('name', document.getElementById('name').value);
+        formData.append('surname', document.getElementById('surname').value);
+        formData.append('age', document.getElementById('age').value);
+        formData.append('gender', document.querySelector('input[name="gender"]:checked').value);
+        formData.append('salary', document.getElementById('salary').value);
+
+        fetch(`${API_BASE}/register`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Server cavab vermədi');
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    successMsg.style.display = 'block';
+                    form.reset();
+                    fetchUsers();
+
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 3000);
+                } else {
+                    throw new Error(data.message || 'Qeydiyyat zamanı xəta baş verdi');
+                }
+            })
+            .catch(error => {
+                console.error('Xəta:', error);
+                errorText.textContent = error.message;
+                errorMsg.style.display = 'block';
+            });
+    });
+
+    // Axtarış filterləri üçün hadisə dinləyiciləri
+    searchName.addEventListener('input', filterAndSortUsers);
+    searchGender.addEventListener('change', filterAndSortUsers);
+    sortBy.addEventListener('change', filterAndSortUsers);
+
+    // Sıfırla düyməsi
+    resetSearch.addEventListener('click', function() {
+        searchName.value = '';
+        searchGender.value = '';
+        sortBy.value = 'name';
+        filterAndSortUsers();
+    });
+
+    // Yenilə düyməsi
+    refreshBtn.addEventListener('click', fetchUsers);
+
+    // İlk səhifə yüklənəndə istifadəçiləri gətir
+    document.addEventListener('DOMContentLoaded', fetchUsers);
+</script>
+</body>
+</html>
