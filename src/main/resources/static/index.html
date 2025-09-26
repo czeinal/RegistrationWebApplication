@@ -3,150 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İstifadəçi Qeydiyyat Sistemi</title>
+    <title>İstifadəçi İdarəetmə Sistemi</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
-            --primary: #4e73df;
-            --secondary: #6f42c1;
-            --success: #1cc88a;
-            --danger: #e74a3b;
-            --light: #f8f9fc;
-            --dark: #5a5c69;
+            --primary: #4a6bff;
+            --primary-dark: #3a56d4;
+            --secondary: #ff6b6b;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 10px;
+            --transition: all 0.3s ease;
         }
 
         body {
-            background-color: #f8f9fc;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
         }
 
-        .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        .custom-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            border-radius: 10px;
-            padding: 20px;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card {
+        .custom-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        .custom-card {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: white;
         }
 
-        .card-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            padding: 15px 20px;
-            font-weight: 600;
+        .custom-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
+
+        .custom-tab {
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            border: none;
+            background: #f8f9fa;
+            flex: 1;
+            border-radius: 0;
+            color: var(--gray);
+        }
+
+        .custom-tab:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        .custom-tab:last-child {
+            border-top-right-radius: 10px;
+        }
+
+        .custom-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .custom-tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .custom-tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .file-input-button:hover {
+            background: #e9ecef;
+            border-color: var(--primary);
+        }
+
+        .user-card {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .user-image-container {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .user-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .user-card:hover .user-image {
+            transform: scale(1.1);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .btn-custom {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 107, 255, 0.3);
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {transform: scale(1);}
+            50% {transform: scale(1.05);}
+            100% {transform: scale(1);}
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.5s ease;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .user-details p {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-details i {
+            width: 20px;
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+
+        .custom-toast {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            animation: slideInRight 0.3s ease;
+            min-width: 300px;
+        }
+
+        .custom-toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .custom-toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .custom-toast i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .success i { color: var(--success); }
+        .error i { color: var(--danger); }
 
         .form-control, .form-select {
             border-radius: 8px;
-            padding: 10px 15px;
-            border: 2px solid #e3e6f0;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            transition: var(--transition);
         }
 
         .form-control:focus, .form-select:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(74, 107, 255, 0.25);
         }
 
-        .btn {
-            border-radius: 8px;
-            padding: 10px 15px;
+        .card-header {
+            padding: 20px;
             font-weight: 600;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        .pagination .page-link {
+            border-radius: 6px;
+            margin: 0 3px;
             border: none;
+            color: var(--primary);
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #c53b2f 100%);
-            border: none;
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.875rem;
-        }
-
-        .table-container {
-            max-height: 500px;
-            overflow-y: auto;
-            border-radius: 0 0 10px 10px;
-        }
-
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-        }
-
-        th {
-            background-color: var(--primary);
-            color: white;
-            position: sticky;
-            top: 0;
-            padding: 12px 15px;
-        }
-
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e3e6f0;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f8f9fc;
-        }
-
-        tr:hover {
-            background-color: rgba(78, 115, 223, 0.05);
-        }
-
-        .search-panel {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .message {
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
+        .pagination .page-item.active .page-link {
+            background: var(--primary);
+            border-color: var(--primary);
         }
 
         @media (max-width: 768px) {
-            .action-buttons {
-                flex-direction: column;
+            .floating-action {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .custom-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
             }
         }
     </style>
@@ -154,362 +382,534 @@
 <body>
 <div class="container">
     <!-- Header -->
-    <div class="header text-center">
-        <h1><i class="fas fa-users me-2"></i>İstifadəçi Qeydiyyat Sistemi</h1>
-        <p class="lead">İstifadəçi məlumatlarını idarə etmək üçün tam funksional panel</p>
+    <header class="custom-header animate__animated animate__fadeInDown">
+        <h1 class="display-4 fw-bold"><i class="fas fa-users-cog me-2"></i> İstifadəçi İdarəetmə Sistemi</h1>
+        <p class="lead">İstifadəçiləri asanlıqla qeydiyyatdan keçirin və idarə edin</p>
+    </header>
+
+    <!-- Statistika Paneli -->
+    <div class="row mb-4 animate__animated animate__fadeIn">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card pulse">
+                <div class="stat-value text-primary" id="total-users">0</div>
+                <div class="stat-label">Ümumi İstifadəçi</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card pulse">
+                <div class="stat-value text-info" id="male-users">0</div>
+                <div class="stat-label">Kişi İstifadəçi</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card pulse">
+                <div class="stat-value text-warning" id="female-users">0</div>
+                <div class="stat-label">Qadın İstifadəçi</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card pulse">
+                <div class="stat-value text-success" id="avg-salary">0</div>
+                <div class="stat-label">Orta Maaş (AZN)</div>
+            </div>
+        </div>
     </div>
 
-    <!-- Axtarış Paneli -->
-    <div class="search-panel">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="searchName" class="form-label">Ada görə axtarış</label>
-                    <input type="text" class="form-control" id="searchName" placeholder="Ad və ya soyad daxil edin">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="searchGender" class="form-label">Cinsiyyət</label>
-                    <select class="form-select" id="searchGender">
-                        <option value="">Hamısı</option>
-                        <option value="Kişi">Kişi</option>
-                        <option value="Qadın">Qadın</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="sortBy" class="form-label">Sırala</label>
-                    <select class="form-select" id="sortBy">
-                        <option value="name">Ada görə</option>
-                        <option value="surname">Soyada görə</option>
-                        <option value="age">Yaşa görə</option>
-                        <option value="salary">Maaşa görə</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button class="btn btn-primary w-100" id="resetSearch">
-                    <i class="fas fa-sync-alt me-1"></i> Sıfırla
+    <!-- Tab Nav -->
+    <div class="card mb-4">
+        <div class="card-body p-0">
+            <div class="d-flex">
+                <button class="custom-tab active" data-tab="register">
+                    <i class="fas fa-user-plus me-2"></i> İstifadəçi Qeydiyyatı
+                </button>
+                <button class="custom-tab" data-tab="view">
+                    <i class="fas fa-list me-2"></i> İstifadəçiləri Görüntülə
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <!-- Qeydiyyat Formu -->
-        <div class="col-lg-5">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Yeni İstifadəçi Qeydiyyatı</h5>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-success message" id="successMsg" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>İstifadəçi uğurla qeydiyyatdan keçdi!
+    <!-- Qeydiyyat Formu -->
+    <div id="register-tab" class="custom-tab-content active">
+        <div class="card custom-card animate__animated animate__fadeIn">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0"><i class="fas fa-user-plus me-2"></i> Yeni İstifadəçi Qeydiyyatı</h3>
+            </div>
+            <div class="card-body">
+                <form id="register-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Ad <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" required placeholder="İstifadəçinin adını daxil edin">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="surname" class="form-label">Soyad <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="surname" name="surname" required placeholder="İstifadəçinin soyadını daxil edin">
+                            </div>
+                        </div>
                     </div>
-                    <div class="alert alert-danger message" id="errorMsg" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i><span id="errorText">Xəta baş verdi</span>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="age" class="form-label">Yaş <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="age" name="age" min="1" max="120" required placeholder="İstifadəçinin yaşını daxil edin">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="gender" class="form-label">Cins <span class="text-danger">*</span></label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="">Cins seçin</option>
+                                    <option value="Kişi">Kişi</option>
+                                    <option value="Qadın">Qadın</option>
+                                    <option value="Digər">Digər</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <form id="registerForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="name" class="form-label">Ad</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="surname" class="form-label">Soyad</label>
-                                    <input type="text" class="form-control" id="surname" name="surname" required>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="salary" class="form-label">Maaş (AZN) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="salary" name="salary" min="0" step="0.01" required placeholder="İstifadəçinin maaşını daxil edin">
+                    </div>
 
-                        <div class="form-group mb-3">
-                            <label for="age" class="form-label">Yaş</label>
-                            <input type="number" class="form-control" id="age" name="age" min="1" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label class="form-label">Cinsiyyət</label>
-                            <div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="male" value="Kişi" required>
-                                    <label class="form-check-label" for="male">Kişi</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="female" value="Qadın">
-                                    <label class="form-check-label" for="female">Qadın</label>
-                                </div>
+                    <div class="mb-4">
+                        <label for="imageFile" class="form-label">Profil Şəkli <span class="text-danger">*</span></label>
+                        <div class="file-input-wrapper">
+                            <div class="file-input-button">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                <span id="file-button-text">Şəkil Faylı Seçin</span>
                             </div>
+                            <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
                         </div>
+                        <div id="file-name" class="form-text"></div>
+                    </div>
 
-                        <div class="form-group mb-4">
-                            <label for="salary" class="form-label">Maaş</label>
-                            <div class="input-group">
-                                <input type="number" step="0.01" class="form-control" id="salary" name="salary" min="0" required>
-                                <span class="input-group-text">AZN</span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-user-plus me-2"></i>Qeydiyyatdan Keç
-                        </button>
-                    </form>
-                </div>
+                    <button type="submit" class="btn btn-custom w-100">
+                        <i class="fas fa-user-plus me-2"></i> İstifadəçini Qeydiyyatdan Keçir
+                    </button>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- İstifadəçi Siyahısı -->
-        <div class="col-lg-7">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Qeydiyyatdan Keçmiş İstifadəçilər</h5>
-                    <button class="btn btn-sm btn-light" id="refreshBtn">
-                        <i class="fas fa-sync-alt me-1"></i> Yenilə
-                    </button>
+    <!-- İstifadəçi Siyahısı -->
+    <div id="view-tab" class="custom-tab-content">
+        <div class="card custom-card animate__animated animate__fadeIn">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0"><i class="fas fa-list me-2"></i> Bütün İstifadəçilər</h3>
+                <span class="badge bg-light text-dark fs-6" id="user-count">0 istifadəçi</span>
+            </div>
+            <div class="card-body">
+                <div id="user-list-container" class="row">
+                    <!-- İstifadəçi kartları buraya əlavə olunacaq -->
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-container">
-                        <table class="table table-striped mb-0">
-                            <thead>
-                            <tr>
-                                <th>İstifadəçi</th>
-                                <th>Yaş</th>
-                                <th>Cinsiyyət</th>
-                                <th>Maaş</th>
-                                <th>Əməliyyat</th>
-                            </tr>
-                            </thead>
-                            <tbody id="usersTableBody">
-                            <tr>
-                                <td colspan="5" class="text-center py-5">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Yüklənir...</span>
-                                    </div>
-                                    <p class="mt-2">Yüklənir...</p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="İstifadəçi səhifələri" class="mt-4">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Pagination kontrolları buraya əlavə olunacaq -->
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Floating Action Button -->
+<div class="floating-action">
+    <button class="btn btn-primary btn-lg rounded-circle shadow" id="scroll-top" title="Yuxarı çıx">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container">
+    <!-- Toast mesajları buraya əlavə olunacaq -->
+</div>
+
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    let users = [];
+    // Dəyişənlər
+    let currentPage = 0;
+    const pageSize = 6;
+    let totalPages = 0;
+    let allUsers = [];
 
-    const form = document.getElementById('registerForm');
-    const successMsg = document.getElementById('successMsg');
-    const errorMsg = document.getElementById('errorMsg');
-    const errorText = document.getElementById('errorText');
-    const usersTableBody = document.getElementById('usersTableBody');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const searchName = document.getElementById('searchName');
-    const searchGender = document.getElementById('searchGender');
-    const sortBy = document.getElementById('sortBy');
-    const resetSearch = document.getElementById('resetSearch');
+    // Tab dəyişdirmə funksionallığı
+    document.querySelectorAll('.custom-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Bütün tab və kontentlərdən aktiv classını sil
+            document.querySelectorAll('.custom-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.custom-tab-content').forEach(c => c.classList.remove('active'));
 
-    // API əsas URL
-    const API_BASE = 'http://localhost:8080';
+            // Kliklənmiş tab və uyğun kontentə aktiv classını əlavə et
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
 
-    // İstifadəçiləri gətir və cədvələ əlavə et
-    function fetchUsers() {
-        usersTableBody.innerHTML = `
-            <tr>
-                <td colspan="5" class="text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Yüklənir...</span>
-                    </div>
-                    <p class="mt-2">Yüklənir...</p>
-                </td>
-            </tr>
-        `;
-
-        fetch(`${API_BASE}/users`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('İstifadəçi məlumatları gətirilə bilmədi');
-                }
-                return response.json();
-            })
-            .then(data => {
-                users = data;
-                filterAndSortUsers();
-            })
-            .catch(error => {
-                console.error('Xəta:', error);
-                usersTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-danger">Xəta baş verdi: ' + error.message + '</td></tr>';
-            });
-    }
-
-    // Filter və sıralama funksiyası
-    function filterAndSortUsers() {
-        let filteredUsers = [...users];
-
-        // Ada görə filter
-        if (searchName.value) {
-            const searchTerm = searchName.value.toLowerCase();
-            filteredUsers = filteredUsers.filter(user =>
-                (user.name && user.name.toLowerCase().includes(searchTerm)) ||
-                (user.surname && user.surname.toLowerCase().includes(searchTerm))
-            );
-        }
-
-        // Cinsiyyətə görə filter
-        if (searchGender.value) {
-            filteredUsers = filteredUsers.filter(user => user.gender === searchGender.value);
-        }
-
-        // Sıralama
-        const sortField = sortBy.value;
-        filteredUsers.sort((a, b) => {
-            if (a[sortField] < b[sortField]) return -1;
-            if (a[sortField] > b[sortField]) return 1;
-            return 0;
+            // Əgər istifadəçiləri görüntüləmə tabı kliklənibsə, istifadəçiləri yüklə
+            if (tabId === 'view') {
+                loadUsers(currentPage, pageSize);
+            }
         });
+    });
 
-        renderUsers(filteredUsers);
-    }
+    // Fayl input göstəricisi
+    document.getElementById('imageFile').addEventListener('change', function(e) {
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'Heç bir fayl seçilməyib';
+        document.getElementById('file-name').textContent = fileName;
+        document.getElementById('file-button-text').textContent = fileName ? 'Faylı Dəyiş' : 'Şəkil Faylı Seçin';
+    });
 
-    // İstifadəçiləri cədvələ render et
-    function renderUsers(usersArray) {
-        if (usersArray.length === 0) {
-            usersTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Heç bir istifadəçi tapılmadı</td></tr>';
-            return;
-        }
-
-        usersTableBody.innerHTML = usersArray.map(user => {
-            const initials = (user.name ? user.name.charAt(0) : '') + (user.surname ? user.surname.charAt(0) : '');
-            return `
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="user-avatar">${initials}</div>
-                                <div>
-                                    <div class="fw-bold">${user.name || ''} ${user.surname || ''}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>${user.age || ''}</td>
-                        <td>${user.gender || ''}</td>
-                        <td><span class="fw-bold">${user.salary ? user.salary.toFixed(2) : '0.00'}</span> AZN</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-sm btn-danger delete-btn" data-id="${user.id}">
-                                    <i class="fas fa-trash"></i> Sil
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-        }).join('');
-
-        // Sil düymələrinə hadisə əlavə et
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const userId = this.getAttribute('data-id');
-                deleteUser(userId);
-            });
-        });
-    }
-
-    // İstifadəçi sil
-    function deleteUser(userId) {
-        if (confirm('Bu istifadəçini silmək istədiyinizə əminsiniz?')) {
-            fetch(`${API_BASE}/users/${userId}`, {
-                method: 'DELETE'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('Silinmə əməliyyatı uğursuz oldu');
-                })
-                .then(data => {
-                    if (data.status === 'success') {
-                        // İstifadəçiləri yenidən yüklə
-                        fetchUsers();
-                    } else {
-                        alert('Silinmə əməliyyatı uğursuz oldu: ' + (data.message || 'Bilinməyən səbəb'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Xəta:', error);
-                    alert('Xəta baş verdi: ' + error.message);
-                });
-        }
-    }
-
-    // Form göndərildikdə
-    form.addEventListener('submit', function(e) {
+    // Form göndərilməsi
+    document.getElementById('register-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
+        const formData = new FormData(this);
 
-        const formData = new FormData();
-        formData.append('name', document.getElementById('name').value);
-        formData.append('surname', document.getElementById('surname').value);
-        formData.append('age', document.getElementById('age').value);
-        formData.append('gender', document.querySelector('input[name="gender"]:checked').value);
-        formData.append('salary', document.getElementById('salary').value);
+        // Yükləmə vəziyyətini göstər
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span> Qeydiyyat davam edir...';
+        submitBtn.disabled = true;
 
-        fetch(`${API_BASE}/register`, {
+        fetch('/register', {
             method: 'POST',
             body: formData
         })
             .then(response => {
-                if (response.ok) {
-                    return response.json();
+                if (!response.ok) {
+                    throw new Error('Server xətası');
                 }
-                throw new Error('Server cavab vermədi');
+                return response.json();
             })
             .then(data => {
                 if (data.status === 'success') {
-                    successMsg.style.display = 'block';
-                    form.reset();
-                    fetchUsers();
+                    showToast('success', 'İstifadəçi uğurla qeydiyyatdan keçdi!');
 
+                    // Formu sıfırla
+                    document.getElementById('register-form').reset();
+                    document.getElementById('file-name').textContent = '';
+                    document.getElementById('file-button-text').textContent = 'Şəkil Faylı Seçin';
+
+                    // Statistikaları yenilə
+                    updateStats();
+
+                    // Uğurlu qeydiyyatdan sonra görüntüləmə tabına keç
                     setTimeout(() => {
-                        successMsg.style.display = 'none';
-                    }, 3000);
+                        document.querySelector('.custom-tab[data-tab="view"]').click();
+                    }, 1500);
                 } else {
-                    throw new Error(data.message || 'Qeydiyyat zamanı xəta baş verdi');
+                    throw new Error(data.message || 'Qeydiyyat uğursuz oldu');
                 }
             })
             .catch(error => {
+                showToast('error', `Xəta: ${error.message}`);
                 console.error('Xəta:', error);
-                errorText.textContent = error.message;
-                errorMsg.style.display = 'block';
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             });
     });
 
-    // Axtarış filterləri üçün hadisə dinləyiciləri
-    searchName.addEventListener('input', filterAndSortUsers);
-    searchGender.addEventListener('change', filterAndSortUsers);
-    sortBy.addEventListener('change', filterAndSortUsers);
+    // İstifadəçiləri yüklə funksiyası
+    function loadUsers(page = 0, size = pageSize) {
+        const userListContainer = document.getElementById('user-list-container');
 
-    // Sıfırla düyməsi
-    resetSearch.addEventListener('click', function() {
-        searchName.value = '';
-        searchGender.value = '';
-        sortBy.value = 'name';
-        filterAndSortUsers();
+        // Yükləmə vəziyyətini göstər
+        userListContainer.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Yüklənir...</span>
+                    </div>
+                    <p class="mt-2">İstifadəçilər yüklənir...</p>
+                </div>
+            `;
+
+        // API çağırışı
+        fetch('/users')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server xətası');
+                }
+                return response.json();
+            })
+            .then(users => {
+                allUsers = users;
+
+                if (users.length === 0) {
+                    userListContainer.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">Hələ heç bir istifadəçi qeydiyyatdan keçməyib.</h4>
+                            <p class="text-muted">İlk istifadəçini qeydiyyatdan keçirmək üçün "İstifadəçi Qeydiyyatı" tab-ına keçin.</p>
+                        </div>
+                    `;
+                    document.getElementById('pagination').innerHTML = '';
+                    document.getElementById('user-count').textContent = '0 istifadəçi';
+                    return;
+                }
+
+                // İstifadəçi sayını güncəllə
+                document.getElementById('user-count').textContent = `${users.length} istifadəçi`;
+
+                // Səhifələməni tətbiq et
+                const startIndex = page * size;
+                const endIndex = startIndex + size;
+                const usersToShow = users.slice(startIndex, endIndex);
+                totalPages = Math.ceil(users.length / size);
+
+                userListContainer.innerHTML = '';
+
+                usersToShow.forEach((user, index) => {
+                    const userCard = createUserCard(user, index);
+                    userListContainer.appendChild(userCard);
+                });
+
+                // Pagination kontrollarını yarat
+                createPaginationControls(page, totalPages);
+            })
+            .catch(error => {
+                userListContainer.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                        <h4 class="text-danger">İstifadəçilər yüklənərkən xəta baş verdi.</h4>
+                        <p class="text-muted">Xəta: ${error.message}</p>
+                        <button class="btn btn-primary mt-2" onclick="loadUsers()">Yenidən yoxla</button>
+                    </div>
+                `;
+                document.getElementById('pagination').innerHTML = '';
+            });
+
+        // Statistikaları yenilə
+        updateStats();
+    }
+
+    // İstifadəçi kartı yarat funksiyası
+    function createUserCard(user, index) {
+        const col = document.createElement('div');
+        col.className = `col-md-6 col-lg-4 mb-4 animate__animated animate__fadeInUp`;
+        col.style.animationDelay = `${index * 0.1}s`;
+
+        // Şəkil yoxdursa default şəkil istifadə et
+        const imagePath = user.imagePath || 'https://via.placeholder.com/300x200/4a6bff/ffffff?text=Şəkil+Yoxdur';
+
+        // Cins dəyərini Azərbaycan dilində göstər
+        let genderDisplay = user.gender;
+        if (user.gender === 'Male' || user.gender === 'male') {
+            genderDisplay = 'Kişi';
+        } else if (user.gender === 'Female' || user.gender === 'female') {
+            genderDisplay = 'Qadın';
+        }
+
+        col.innerHTML = `
+                <div class="card user-card h-100">
+                    <div class="user-image-container">
+                        <img src="${imagePath}" alt="${user.name} ${user.surname}" class="user-image" onerror="this.src='https://via.placeholder.com/300x200/4a6bff/ffffff?text=Şəkil+Yoxdur'">
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">${user.name} ${user.surname}</h5>
+                        <div class="user-details flex-grow-1">
+                            <p><i class="fas fa-birthday-cake"></i> <span>Yaş: ${user.age}</span></p>
+                            <p><i class="fas fa-venus-mars"></i> <span>Cins: ${genderDisplay}</span></p>
+                            <p><i class="fas fa-money-bill-wave"></i> <span>Maaş: ${user.salary.toFixed(2)} AZN</span></p>
+                        </div>
+                        <button class="btn btn-delete mt-auto" onclick="deleteUser(${user.id})">
+                            <i class="fas fa-trash-alt me-1"></i> Sil
+                        </button>
+                    </div>
+                </div>
+            `;
+
+        return col;
+    }
+
+    // Pagination kontrollarını yarat funksiyası
+    function createPaginationControls(currentPage, totalPages) {
+        const paginationContainer = document.getElementById('pagination');
+
+        if (totalPages <= 1) {
+            paginationContainer.innerHTML = '';
+            return;
+        }
+
+        let paginationHTML = '';
+
+        // Əvvəlki səhifə düyməsi
+        paginationHTML += `
+                <li class="page-item ${currentPage === 0 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage - 1})">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+
+        // Səhifə nömrələri
+        const startPage = Math.max(0, currentPage - 2);
+        const endPage = Math.min(totalPages - 1, currentPage + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0)" onclick="changePage(${i})">${i + 1}</a>
+                    </li>
+                `;
+        }
+
+        // Növbəti səhifə düyməsi
+        paginationHTML += `
+                <li class="page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage + 1})">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+
+        paginationContainer.innerHTML = paginationHTML;
+    }
+
+    // Səhifəni dəyiş funksiyası
+    function changePage(newPage) {
+        if (newPage >= 0 && newPage < totalPages) {
+            currentPage = newPage;
+            loadUsers(currentPage, pageSize);
+
+            // Səhifənin yuxarısına çıx
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    // İstifadəçi sil funksiyası
+    function deleteUser(userId) {
+        if (!confirm('Bu istifadəçini silmək istədiyinizdən əminsiniz?')) {
+            return;
+        }
+
+        fetch(`/users/${userId}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('success', 'İstifadəçi uğurla silindi!');
+
+                    // İstifadəçi siyahısını yenilə
+                    loadUsers(currentPage, pageSize);
+
+                    // Statistikaları yenilə
+                    updateStats();
+                } else {
+                    throw new Error(data.message || 'Silinmə uğursuz oldu');
+                }
+            })
+            .catch(error => {
+                showToast('error', `Xəta: ${error.message}`);
+                console.error('Xəta:', error);
+            });
+    }
+
+    // Statistikaları yenilə funksiyası
+    function updateStats() {
+        // Əgər allUsers dəyişəni boşdursa, API-dan məlumatları al
+        if (allUsers.length === 0) {
+            fetch('/users')
+                .then(response => response.json())
+                .then(users => {
+                    allUsers = users;
+                    calculateAndDisplayStats(users);
+                })
+                .catch(error => {
+                    console.error('Statistikaları yeniləyərkən xəta:', error);
+                });
+        } else {
+            calculateAndDisplayStats(allUsers);
+        }
+    }
+
+    // Statistikaları hesabla və göstər funksiyası
+    function calculateAndDisplayStats(users) {
+        document.getElementById('total-users').textContent = users.length;
+
+        // Cins statistikalarını hesabla (Azərbaycan dilində)
+        const maleUsers = users.filter(user => {
+            const gender = user.gender ? user.gender.toLowerCase() : '';
+            return gender === 'kişi' || gender === 'male' || gender === 'kisi';
+        }).length;
+
+        const femaleUsers = users.filter(user => {
+            const gender = user.gender ? user.gender.toLowerCase() : '';
+            return gender === 'qadın' || gender === 'qadin' || gender === 'female';
+        }).length;
+
+        document.getElementById('male-users').textContent = maleUsers;
+        document.getElementById('female-users').textContent = femaleUsers;
+
+        if (users.length > 0) {
+            const totalSalary = users.reduce((sum, user) => sum + user.salary, 0);
+            const avgSalary = totalSalary / users.length;
+            document.getElementById('avg-salary').textContent = avgSalary.toFixed(2);
+        } else {
+            document.getElementById('avg-salary').textContent = '0';
+        }
+    }
+
+    // Toast mesajı göstər funksiyası
+    function showToast(type, message) {
+        const toastContainer = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `custom-toast ${type}`;
+
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+        toast.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `;
+
+        toastContainer.appendChild(toast);
+
+        // 5 saniyə sonra toast-u sil
+        setTimeout(() => {
+            toast.remove();
+        }, 5000);
+    }
+
+    // Scroll to top funksionallığı
+    document.getElementById('scroll-top').addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Yenilə düyməsi
-    refreshBtn.addEventListener('click', fetchUsers);
+    // Scroll eventi - yuxarı çıx düyməsini göstər/gizlət
+    window.addEventListener('scroll', function() {
+        const scrollTopBtn = document.getElementById('scroll-top');
+        if (window.pageYOffset > 300) {
+            scrollTopBtn.style.display = 'block';
+        } else {
+            scrollTopBtn.style.display = 'none';
+        }
+    });
 
-    // İlk səhifə yüklənəndə istifadəçiləri gətir
-    document.addEventListener('DOMContentLoaded', fetchUsers);
+    // Səhifə yükləndikdə ilkin yükləmə
+    document.addEventListener('DOMContentLoaded', function() {
+        // Statistikaları yenilə
+        updateStats();
+
+        // Əgər görüntüləmə tabındaysaq, istifadəçiləri yüklə
+        if (document.getElementById('view-tab').classList.contains('active')) {
+            loadUsers(currentPage, pageSize);
+        }
+
+        // Scroll to top düyməsini başlanğıcda gizlət
+        document.getElementById('scroll-top').style.display = 'none';
+    });
 </script>
 </body>
 </html>

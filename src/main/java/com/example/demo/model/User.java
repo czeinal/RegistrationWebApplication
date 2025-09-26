@@ -18,6 +18,7 @@ public class User {
     private Integer age;
     private String gender;
     private Double salary;
+    private String imagePath;
 
 
     public User() {
@@ -29,6 +30,10 @@ public class User {
         this.age = age;
         this.gender = gender;
         this.salary = salary;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     public Long getId() {
@@ -75,4 +80,7 @@ public class User {
         this.surname = surname;
     }
 
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }
